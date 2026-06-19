@@ -12,7 +12,7 @@ import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/shop/ProductCard";
 import { Product } from "@/types";
 
-const categories = ["All", "Pickles", "Thokku", "Podis", "Snacks", "Combo Packs"];
+const categories = ["All", "Pickles", "Karuvadu", "Combo Packs"];
 
 const sortOptions = [
   { value: "newest", label: "Newest First" },

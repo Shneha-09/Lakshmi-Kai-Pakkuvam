@@ -34,7 +34,7 @@ const contactInfo = [
     icon: MapPin,
     title: "Visit Us",
     value: "Burmanagar, Ennore, Chennai, Tamil Nadu",
-    sub: "India — 636 001",
+    sub: "India ",
   },
   {
     icon: Clock,

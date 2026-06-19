@@ -1,4 +1,6 @@
 "use client";
+
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Leaf, Flame, Package, Heart } from "lucide-react";
 
@@ -27,17 +29,30 @@ const promises = [
 
 export default function BrandPromise() {
   return (
-    <section className="py-16 md:py-20 bg-brown-800 text-white relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-72 h-72 bg-gold-500/10 rounded-full blur-3xl" />
-      <div className="max-w-7xl mx-auto px-4 relative">
+    <section className="relative py-16 md:py-24 text-white overflow-hidden">
+      <Image
+        src="/images/Home/home3.png"
+        alt="Lakshmi Kai Pakkuvam promise background"
+        fill
+        priority
+        className="object-cover"
+      />
+
+      <div className="absolute inset-0 bg-brown-900/45" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="text-center mb-12"
         >
-          <span className="text-gold-400 font-semibold text-sm tracking-widest uppercase">Our Promise</span>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold mt-2">Why Families Trust Us</h2>
+          <span className="text-gold-400 font-semibold text-sm tracking-widest uppercase">
+            Our Promise
+          </span>
+          <h2 className="font-serif text-3xl md:text-4xl font-bold mt-2">
+            Why Families Trust Us
+          </h2>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -50,11 +65,13 @@ export default function BrandPromise() {
               transition={{ delay: i * 0.1 }}
               className="text-center"
             >
-              <div className="w-16 h-16 rounded-2xl bg-brown-700 flex items-center justify-center mx-auto mb-4 border border-gold-500/20">
+              <div className="w-16 h-16 rounded-2xl bg-brown-700/80 backdrop-blur flex items-center justify-center mx-auto mb-4 border border-gold-500/25">
                 <item.icon size={26} className="text-gold-400" />
               </div>
               <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-              <p className="text-cream-200 text-sm leading-relaxed">{item.desc}</p>
+              <p className="text-cream-100 text-sm leading-relaxed">
+                {item.desc}
+              </p>
             </motion.div>
           ))}
         </div>

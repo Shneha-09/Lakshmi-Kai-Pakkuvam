@@ -7,7 +7,7 @@ import { Upload, X, Loader2, Check } from "lucide-react";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import { getAuthHeaders } from "@/hooks/useAdminAuth";
 
-const categories = ["Pickles", "Thokku", "Podis", "Snacks", "Combo Packs"];
+const categories = ["Pickles", "Karuvadu", "Combo Packs"];
 
 interface FormState {
   name: string;

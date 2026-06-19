@@ -26,7 +26,7 @@ export default function Hero() {
             The Taste of <span className="text-maroon-700 italic">Ammamma&apos;s</span> Kitchen, Delivered
           </h1>
           <p className="text-brown-600 text-base md:text-lg leading-relaxed mb-8 max-w-lg">
-            Handcrafted pickles, thokku, podis &amp; snacks made the way our grandmothers made them —
+            Handcrafted pickles,  &amp; Karuvadu made the way our grandmothers made them —
             slow-cooked, sun-dried, and packed with real ingredients. No shortcuts, no preservatives.
           </p>
           <div className="flex flex-wrap gap-4 mb-10">

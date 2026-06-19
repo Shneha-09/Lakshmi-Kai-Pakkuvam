@@ -4,12 +4,12 @@ import { motion } from "framer-motion";
 import { Instagram } from "lucide-react";
 
 const images = [
-  "https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400&q=80",
-  "https://images.unsplash.com/photo-1599909533730-f0e91d6091c0?w=400&q=80",
-  "https://images.unsplash.com/photo-1606914501449-5a96b6ce24ca?w=400&q=80",
-  "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400&q=80",
-  "https://images.unsplash.com/photo-1626200926749-c9a08c7b8c4f?w=400&q=80",
-  "https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=400&q=80",
+  "/images/Pickles/Karuvadu.png",
+  "/images/Pickles/karuvadu1.png",
+  "/images/Pickles/karuvadu2.png",
+  "/images/Pickles/Pickle1.png",
+  "/images/Pickles/Pickle2.png",
+  "/images/Pickles/Pickle9.png",
 ];
 
 export default function InstagramGallery() {

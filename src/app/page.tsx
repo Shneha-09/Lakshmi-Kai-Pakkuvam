@@ -9,7 +9,7 @@ import OfferCTA from "@/components/home/OfferCTA";
 import Testimonials from "@/components/home/Testimonials";
 import InstagramGallery from "@/components/home/InstagramGallery";
 import Newsletter from "@/components/home/Newsletter";
-
+import PicklesSlideshow from "@/components/home/PicklesSlideshow";
 export default function HomePage() {
   return (
     <>
@@ -17,6 +17,7 @@ export default function HomePage() {
       <Navbar />
       <main>
         <Hero />
+        <PicklesSlideshow />
         <FeaturedProducts />
         <BrandPromise />
         <BestSellers />

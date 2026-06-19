@@ -99,7 +99,7 @@ export default function AboutPage() {
               className="relative aspect-[4/5] rounded-3xl overflow-hidden shadow-card-hover"
             >
               <Image
-                src="/images/hero image.png"
+                src="/images/Home/about.png"
                 alt="Traditional cooking process"
                 fill
                 className="object-cover"
