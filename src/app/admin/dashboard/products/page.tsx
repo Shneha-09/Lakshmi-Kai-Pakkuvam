@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -49,6 +50,7 @@ export default function ProductUploadPage() {
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     setImageFile(file);
     setImagePreview(URL.createObjectURL(file));
     setError("");
@@ -62,18 +64,30 @@ export default function ProductUploadPage() {
     setForm(initialForm);
     setImageFile(null);
     setImagePreview(null);
-    if (fileInputRef.current) fileInputRef.current.value = "";
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setError("");
+    setSuccess(false);
 
     if (!imageFile) {
       setError("Please upload a product image.");
       return;
     }
-    if (!form.name || !form.price || !form.discountPrice || !form.weight || !form.stock) {
+
+    if (
+      !form.name ||
+      !form.price ||
+      !form.discountPrice ||
+      !form.weight ||
+      !form.stock
+    ) {
       setError("Please fill in all required fields.");
       return;
     }
@@ -82,55 +96,80 @@ export default function ProductUploadPage() {
     setUploading(true);
 
     try {
-      // Upload image to Cloudinary first
       const formData = new FormData();
       formData.append("file", imageFile);
-      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
+
+      const uploadRes = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
       const uploadData = await uploadRes.json();
 
-      if (!uploadData.success) {
-        setError("Image upload failed. Please try again.");
+      console.log("UPLOAD RESPONSE:", uploadData);
+
+      if (!uploadRes.ok || !uploadData.success) {
+        setError(
+          uploadData.error ||
+            uploadData.message ||
+            "Image upload failed. Please check Cloudinary settings."
+        );
+
         setSubmitting(false);
         setUploading(false);
         return;
       }
+
       setUploading(false);
 
-      // Create product in MongoDB
       const productData = {
-        name: form.name,
+        name: form.name.trim(),
         category: form.category,
-        price: parseFloat(form.price),
-        discountPrice: parseFloat(form.discountPrice),
-        weight: form.weight,
-        description: form.description,
-        ingredients: form.ingredients,
-        shelfLife: form.shelfLife,
-        stock: parseInt(form.stock),
+        price: Number(form.price),
+        discountPrice: Number(form.discountPrice),
+        weight: form.weight.trim(),
+        description: form.description.trim(),
+        ingredients: form.ingredients.trim(),
+        shelfLife: form.shelfLife.trim(),
+        stock: Number(form.stock),
         image: uploadData.url,
         imagePublicId: uploadData.publicId,
         isBestSeller: form.isBestSeller,
         isFeatured: form.isFeatured,
-        inStock: parseInt(form.stock) > 0,
+        inStock: Number(form.stock) > 0,
       };
 
       const res = await fetch("/api/products", {
         method: "POST",
-        headers: getAuthHeaders(),
+        headers: {
+          "Content-Type": "application/json",
+          ...getAuthHeaders(),
+        },
         body: JSON.stringify(productData),
       });
+
       const data = await res.json();
 
-      if (data.success) {
-        setSuccess(true);
-        resetForm();
-        setTimeout(() => setSuccess(false), 3000);
-      } else {
-        setError("Failed to save product. Please try again.");
+      console.log("PRODUCT RESPONSE:", data);
+
+      if (!res.ok || !data.success) {
+        setError(
+          data.error ||
+            data.message ||
+            "Image uploaded, but product was not saved in MongoDB."
+        );
+        return;
       }
-    } catch (err) {
-      console.error(err);
-      setError("Something went wrong. Please try again.");
+
+      setSuccess(true);
+      resetForm();
+
+      setTimeout(() => {
+        setSuccess(false);
+      }, 3000);
+    } catch (err: any) {
+      console.error("PRODUCT UPLOAD PAGE ERROR:", err);
+      setError(err.message || "Something went wrong.");
     } finally {
       setSubmitting(false);
       setUploading(false);
@@ -140,22 +179,39 @@ export default function ProductUploadPage() {
   return (
     <AdminSidebar>
       <div className="mb-6">
-        <h1 className="font-serif text-2xl md:text-3xl font-bold text-brown-800">Add New Product</h1>
-        <p className="text-brown-500 text-sm mt-1">Upload a new product to your catalog</p>
+        <h1 className="font-serif text-2xl md:text-3xl font-bold text-brown-800">
+          Add New Product
+        </h1>
+        <p className="text-brown-500 text-sm mt-1">
+          Upload a new product to your catalog
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="max-w-3xl space-y-6">
-        {/* Image upload */}
         <div className="card p-6">
-          <label className="block text-sm font-medium text-brown-700 mb-3">Product Image *</label>
+          <label className="block text-sm font-medium text-brown-700 mb-3">
+            Product Image *
+          </label>
+
           {imagePreview ? (
             <div className="relative w-48 h-48 rounded-2xl overflow-hidden">
-              <Image src={imagePreview} alt="Preview" fill className="object-cover" />
+              <Image
+                src={imagePreview}
+                alt="Preview"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+
               <button
                 type="button"
                 onClick={() => {
                   setImageFile(null);
                   setImagePreview(null);
+
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = "";
+                  }
                 }}
                 className="absolute top-2 right-2 bg-white/90 p-1.5 rounded-full text-maroon-700 hover:bg-white"
               >
@@ -172,6 +228,7 @@ export default function ProductUploadPage() {
               <span className="text-sm">Click to upload</span>
             </button>
           )}
+
           <input
             ref={fileInputRef}
             type="file"
@@ -181,12 +238,14 @@ export default function ProductUploadPage() {
           />
         </div>
 
-        {/* Basic info */}
         <div className="card p-6 space-y-4">
           <h3 className="font-semibold text-brown-800">Basic Information</h3>
+
           <div className="grid sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-sm font-medium text-brown-700 mb-1.5">Product Name *</label>
+              <label className="block text-sm font-medium text-brown-700 mb-1.5">
+                Product Name *
+              </label>
               <input
                 type="text"
                 value={form.name}
@@ -195,8 +254,11 @@ export default function ProductUploadPage() {
                 placeholder="e.g. Spicy Mango Pickle"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-brown-700 mb-1.5">Category *</label>
+              <label className="block text-sm font-medium text-brown-700 mb-1.5">
+                Category *
+              </label>
               <select
                 value={form.category}
                 onChange={(e) => handleChange("category", e.target.value)}
@@ -209,8 +271,11 @@ export default function ProductUploadPage() {
                 ))}
               </select>
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-brown-700 mb-1.5">Weight / Quantity *</label>
+              <label className="block text-sm font-medium text-brown-700 mb-1.5">
+                Weight / Quantity *
+              </label>
               <input
                 type="text"
                 value={form.weight}
@@ -222,12 +287,14 @@ export default function ProductUploadPage() {
           </div>
         </div>
 
-        {/* Pricing & stock */}
         <div className="card p-6 space-y-4">
-          <h3 className="font-semibold text-brown-800">Pricing &amp; Stock</h3>
+          <h3 className="font-semibold text-brown-800">Pricing & Stock</h3>
+
           <div className="grid sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-sm font-medium text-brown-700 mb-1.5">Price (₹) *</label>
+              <label className="block text-sm font-medium text-brown-700 mb-1.5">
+                Price (₹) *
+              </label>
               <input
                 type="number"
                 min={0}
@@ -237,8 +304,11 @@ export default function ProductUploadPage() {
                 placeholder="299"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-brown-700 mb-1.5">Discount Price (₹) *</label>
+              <label className="block text-sm font-medium text-brown-700 mb-1.5">
+                Discount Price (₹) *
+              </label>
               <input
                 type="number"
                 min={0}
@@ -248,8 +318,11 @@ export default function ProductUploadPage() {
                 placeholder="249"
               />
             </div>
+
             <div>
-              <label className="block text-sm font-medium text-brown-700 mb-1.5">Stock Quantity *</label>
+              <label className="block text-sm font-medium text-brown-700 mb-1.5">
+                Stock Quantity *
+              </label>
               <input
                 type="number"
                 min={0}
@@ -262,11 +335,13 @@ export default function ProductUploadPage() {
           </div>
         </div>
 
-        {/* Details */}
         <div className="card p-6 space-y-4">
           <h3 className="font-semibold text-brown-800">Product Details</h3>
+
           <div>
-            <label className="block text-sm font-medium text-brown-700 mb-1.5">Description *</label>
+            <label className="block text-sm font-medium text-brown-700 mb-1.5">
+              Description
+            </label>
             <textarea
               value={form.description}
               onChange={(e) => handleChange("description", e.target.value)}
@@ -275,8 +350,11 @@ export default function ProductUploadPage() {
               placeholder="Describe the product..."
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-brown-700 mb-1.5">Ingredients *</label>
+            <label className="block text-sm font-medium text-brown-700 mb-1.5">
+              Ingredients
+            </label>
             <textarea
               value={form.ingredients}
               onChange={(e) => handleChange("ingredients", e.target.value)}
@@ -285,8 +363,11 @@ export default function ProductUploadPage() {
               placeholder="e.g. Raw mango, gingelly oil, red chilli powder, mustard seeds, salt"
             />
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-brown-700 mb-1.5">Shelf Life *</label>
+            <label className="block text-sm font-medium text-brown-700 mb-1.5">
+              Shelf Life
+            </label>
             <input
               type="text"
               value={form.shelfLife}
@@ -297,19 +378,24 @@ export default function ProductUploadPage() {
           </div>
         </div>
 
-        {/* Flags */}
         <div className="card p-6">
           <h3 className="font-semibold text-brown-800 mb-4">Visibility</h3>
+
           <div className="flex flex-col sm:flex-row gap-4">
             <label className="flex items-center gap-2.5 cursor-pointer">
               <input
                 type="checkbox"
                 checked={form.isBestSeller}
-                onChange={(e) => handleChange("isBestSeller", e.target.checked)}
+                onChange={(e) =>
+                  handleChange("isBestSeller", e.target.checked)
+                }
                 className="w-4 h-4 accent-maroon-700"
               />
-              <span className="text-sm text-brown-700">Mark as Best Seller</span>
+              <span className="text-sm text-brown-700">
+                Mark as Best Seller
+              </span>
             </label>
+
             <label className="flex items-center gap-2.5 cursor-pointer">
               <input
                 type="checkbox"
@@ -323,9 +409,23 @@ export default function ProductUploadPage() {
         </div>
 
         {error && (
-          <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-maroon-700 text-sm">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-red-700 text-sm"
+          >
             {error}
-          </motion.p>
+          </motion.div>
+        )}
+
+        {success && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="rounded-xl bg-green-50 border border-green-200 px-4 py-3 text-green-700 text-sm"
+          >
+            Product saved successfully!
+          </motion.div>
         )}
 
         <button
@@ -337,10 +437,6 @@ export default function ProductUploadPage() {
             <>
               <Loader2 size={18} className="animate-spin" />
               {uploading ? "Uploading Image..." : "Saving Product..."}
-            </>
-          ) : success ? (
-            <>
-              <Check size={18} /> Product Saved!
             </>
           ) : (
             "Save Product"

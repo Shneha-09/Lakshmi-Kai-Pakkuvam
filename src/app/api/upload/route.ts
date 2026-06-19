@@ -4,20 +4,31 @@ import cloudinary from "@/lib/cloudinary";
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
-    const file = formData.get("file") as File;
+    const file = formData.get("file") as File | null;
 
     if (!file) {
-      return NextResponse.json({ success: false, error: "No file provided" }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: "No file uploaded" },
+        { status: 400 }
+      );
     }
 
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-    const base64 = buffer.toString("base64");
-    const dataUri = `data:${file.type};base64,${base64}`;
 
-    const result = await cloudinary.uploader.upload(dataUri, {
-      folder: "lakshmi-kai-pakkuvam",
-      transformation: [{ width: 800, height: 800, crop: "fill", quality: "auto" }],
+    const result: any = await new Promise((resolve, reject) => {
+      cloudinary.uploader
+        .upload_stream(
+          {
+            folder: "lakshmi-kai-pakkuvam/products",
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        )
+        .end(buffer);
     });
 
     return NextResponse.json({
@@ -25,8 +36,15 @@ export async function POST(req: NextRequest) {
       url: result.secure_url,
       publicId: result.public_id,
     });
-  } catch (error) {
-    console.error("Upload error:", error);
-    return NextResponse.json({ success: false, error: "Upload failed" }, { status: 500 });
+  } catch (error: any) {
+    console.error("UPLOAD_ERROR:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        error: error.message || "Image upload failed",
+      },
+      { status: 500 }
+    );
   }
 }
