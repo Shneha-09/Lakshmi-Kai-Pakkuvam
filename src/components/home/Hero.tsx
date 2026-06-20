@@ -67,7 +67,7 @@ export default function Hero() {
               alt="Traditional South Indian pickles in jars"
               fill
               priority
-              className="object-cover"
+              className="object-cover object-[65%_center] md:object-center"
             />
           </div>
           <motion.div

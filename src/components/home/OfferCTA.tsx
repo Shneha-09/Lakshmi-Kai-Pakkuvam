@@ -12,7 +12,7 @@ export default function OfferCTA() {
         initial={{ opacity: 0, scale: 0.97 }}
         whileInView={{ opacity: 1, scale: 1 }}
         viewport={{ once: true }}
-        className="relative max-w-7xl mx-auto h-[320px] md:h-[420px] rounded-[32px] overflow-hidden bg-[#7a001f]"
+        className="relative max-w-7xl mx-auto min-h-[520px] sm:min-h-[460px] md:h-[420px] rounded-[32px] overflow-hidden bg-[#7a001f]"
       >
         {/* Background Image */}
         <Image
@@ -20,7 +20,7 @@ export default function OfferCTA() {
           alt="Combo Packs Banner"
           fill
           priority
-          className="object-cover"
+          className="object-cover object-center"
         />
 
         {/* Overlay */}
@@ -36,18 +36,19 @@ export default function OfferCTA() {
             <Gift size={30} className="text-brown-900" strokeWidth={2.2} />
           </div>
 
-          <h2 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="font-serif text-2xl sm:text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
             Try Our Combo Packs &amp; Save 20%
           </h2>
 
-          <p className="max-w-2xl text-cream-100 text-base md:text-lg leading-relaxed mb-8">
+          <p className="max-w-xl text-cream-100 text-sm sm:text-base md:text-lg leading-relaxed mb-8">
             Get a curated mix of our most-loved pickles, Karuvadu, podis and
             homemade specialties — perfect for gifting or stocking your pantry.
           </p>
 
           <Link
             href="/shop?category=Combo+Packs"
-            className="inline-flex items-center gap-2 bg-gold-500 text-brown-900 px-8 py-4 rounded-xl font-semibold hover:bg-gold-400 transition-all duration-300 group shadow-lg"
+            className="inline-flex items-center gap-2 bg-gold-500 text-brown-900 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold hover:bg-gold-400 transition-all duration-300 group shadow-lg"
+
           >
             Explore Combos
             <ArrowRight

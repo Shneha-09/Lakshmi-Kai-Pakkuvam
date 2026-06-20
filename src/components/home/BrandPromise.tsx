@@ -29,7 +29,7 @@ const promises = [
 
 export default function BrandPromise() {
   return (
-    <section className="relative py-16 md:py-24 text-white overflow-hidden">
+    <section className="relative py-14 sm:py-16 md:py-24 text-white overflow-hidden">
       <Image
         src="/images/Home/home3.png"
         alt="Lakshmi Kai Pakkuvam promise background"
@@ -55,7 +55,7 @@ export default function BrandPromise() {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-8">
           {promises.map((item, i) => (
             <motion.div
               key={item.title}
