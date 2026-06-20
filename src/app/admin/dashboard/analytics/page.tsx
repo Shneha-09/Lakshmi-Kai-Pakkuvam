@@ -30,11 +30,33 @@ interface AnalyticsData {
   }[];
 }
 
+const TARGET_REVENUE = 10000;
+
 const statCards = (data: AnalyticsData) => [
-  { label: "Total Orders", value: data.totalOrders, icon: ShoppingBag, color: "bg-blue-100 text-blue-700" },
-  { label: "Total Revenue", value: `₹${data.totalRevenue.toLocaleString("en-IN")}`, icon: IndianRupee, color: "bg-green-100 text-green-700" },
-  { label: "Pending Orders", value: data.pendingOrders, icon: Clock, color: "bg-yellow-100 text-yellow-700" },
-  { label: "Delivered Orders", value: data.deliveredOrders, icon: CheckCircle2, color: "bg-maroon-700/10 text-maroon-700" },
+  {
+    label: "Total Orders",
+    value: data.totalOrders,
+    icon: ShoppingBag,
+    color: "bg-blue-100 text-blue-700",
+  },
+  {
+    label: "Total Revenue",
+    value: `₹${data.totalRevenue.toLocaleString("en-IN")}`,
+    icon: IndianRupee,
+    color: "bg-green-100 text-green-700",
+  },
+  {
+    label: "Pending Orders",
+    value: data.pendingOrders,
+    icon: Clock,
+    color: "bg-yellow-100 text-yellow-700",
+  },
+  {
+    label: "Delivered Orders",
+    value: data.deliveredOrders,
+    icon: CheckCircle2,
+    color: "bg-maroon-700/10 text-maroon-700",
+  },
 ];
 
 export default function AnalyticsPage() {
@@ -86,8 +108,6 @@ export default function AnalyticsPage() {
     );
   }
 
-  const maxRevenue = Math.max(...data.monthlyData.map((m) => m.revenue), 1);
-
   return (
     <AdminSidebar>
       <div className="mb-6 flex items-start justify-between gap-4">
@@ -134,25 +154,45 @@ export default function AnalyticsPage() {
             Monthly Sales
           </h3>
 
-          <div className="flex items-end justify-between gap-2 h-48">
-            {data.monthlyData.map((m) => (
-              <div key={m.month} className="flex-1 flex flex-col items-center gap-2">
-                <span className="text-xs font-semibold text-brown-700">₹{m.revenue}</span>
-                <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: `${Math.max((m.revenue / maxRevenue) * 100, 4)}%` }}
-                  transition={{ duration: 0.6 }}
-                  className="w-full bg-gradient-to-t from-maroon-700 to-maroon-500 rounded-t-lg min-h-[4px]"
-                  style={{ maxHeight: "160px" }}
-                />
-                <span className="text-xs text-brown-400">{m.month}</span>
-              </div>
-            ))}
+          <div className="flex items-end justify-between gap-3 h-64 pt-6">
+            {data.monthlyData.map((m) => {
+              const barHeight =
+                m.revenue > 0
+                  ? Math.min(
+                      Math.max((m.revenue / TARGET_REVENUE) * 220, 12),
+                      220
+                    )
+                  : 4;
+
+              return (
+                <div
+                  key={m.month}
+                  className="flex-1 flex flex-col items-center justify-end h-full"
+                >
+                  <span className="text-xs font-semibold text-brown-800 mb-2">
+                    ₹{m.revenue.toLocaleString("en-IN")}
+                  </span>
+
+                  <motion.div
+                    initial={{ height: 0 }}
+                    animate={{ height: barHeight }}
+                    transition={{ duration: 0.7 }}
+                    className="w-full max-w-[70px] bg-gradient-to-t from-maroon-700 to-maroon-500 rounded-t-xl min-h-[4px]"
+                  />
+
+                  <span className="text-xs text-brown-400 mt-3">
+                    {m.month}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         <div className="card p-6">
-          <h3 className="font-semibold text-brown-800 mb-6">Best Selling Products</h3>
+          <h3 className="font-semibold text-brown-800 mb-6">
+            Best Selling Products
+          </h3>
 
           {data.bestSellers.length === 0 ? (
             <p className="text-brown-400 text-sm">No delivered sales data yet.</p>
@@ -163,11 +203,17 @@ export default function AnalyticsPage() {
                   <span className="w-7 h-7 rounded-full bg-gold-500/20 text-gold-500 font-bold text-xs flex items-center justify-center">
                     {i + 1}
                   </span>
+
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-brown-800 truncate">{p.name}</p>
+                    <p className="text-sm font-medium text-brown-800 truncate">
+                      {p.name}
+                    </p>
                     <p className="text-xs text-brown-400">{p.quantity} sold</p>
                   </div>
-                  <span className="text-sm font-semibold text-brown-800">₹{p.revenue}</span>
+
+                  <span className="text-sm font-semibold text-brown-800">
+                    ₹{p.revenue.toLocaleString("en-IN")}
+                  </span>
                 </div>
               ))}
             </div>
@@ -194,11 +240,19 @@ export default function AnalyticsPage() {
           <tbody className="divide-y divide-cream-100">
             {data.recentOrders.map((order) => (
               <tr key={order._id} className="text-sm">
-                <td className="px-5 py-3 font-medium text-brown-800">{order.orderNumber}</td>
-                <td className="px-5 py-3 text-brown-600">{order.customer?.name || "Customer"}</td>
-                <td className="px-5 py-3 font-semibold text-brown-800">₹{order.total}</td>
+                <td className="px-5 py-3 font-medium text-brown-800">
+                  {order.orderNumber}
+                </td>
+                <td className="px-5 py-3 text-brown-600">
+                  {order.customer?.name || "Customer"}
+                </td>
+                <td className="px-5 py-3 font-semibold text-brown-800">
+                  ₹{Number(order.total || 0).toLocaleString("en-IN")}
+                </td>
                 <td className="px-5 py-3">
-                  <span className="badge bg-cream-200 text-brown-700">{order.status}</span>
+                  <span className="badge bg-cream-200 text-brown-700">
+                    {order.status}
+                  </span>
                 </td>
                 <td className="px-5 py-3 text-brown-400 text-xs">
                   {new Date(order.createdAt).toLocaleDateString("en-IN")}
