@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, HelpCircle } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import AnnouncementBar from "@/components/layout/AnnouncementBar";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -93,8 +93,9 @@ function FAQItem({
         <motion.div
           animate={{ rotate: isOpen ? 180 : 0 }}
           transition={{ duration: 0.2 }}
+          className="flex-shrink-0"
         >
-          <ChevronDown size={18} className="text-maroon-700 flex-shrink-0" />
+          <ChevronDown size={18} className="text-maroon-700" />
         </motion.div>
       </button>
 
@@ -127,28 +128,16 @@ export default function FAQPage() {
 
       <main>
         {/* FAQ Hero Banner */}
-        <section className="relative h-[250px] md:h-[380px] w-full overflow-hidden">
-          <Image
-            src="/images/hero faq.png"
-            alt="Lakshmi Kai Pakkuvam FAQ banner"
-            fill
-            priority
-            className="object-cover object-center"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
-
-          <div className="absolute inset-0 flex items-center">
-            <div className="max-w-7xl mx-auto w-full px-5 md:px-8">
-              <motion.div
-                initial={{ opacity: 0, y: 22 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="max-w-2xl"
-              >
-               
-              </motion.div>
-            </div>
+        <section className="relative w-full bg-cream-100 overflow-hidden">
+          <div className="relative w-full h-[190px] sm:h-[260px] md:h-[380px] lg:h-[450px]">
+            <Image
+              src="/images/hero faq.png"
+              alt="Lakshmi Kai Pakkuvam FAQ Banner"
+              fill
+              priority
+              sizes="100vw"
+              className="object-contain md:object-cover object-center"
+            />
           </div>
         </section>
 

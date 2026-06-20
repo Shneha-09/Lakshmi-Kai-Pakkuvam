@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
@@ -45,7 +44,7 @@ function ShopContent() {
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
-        if (data.success) setProducts(data.products);
+        if (data.success) setProducts(data.products || []);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -59,7 +58,8 @@ function ShopContent() {
     if (cat === "All") params.delete("category");
     else params.set("category", cat);
 
-    router.push(`/shop?${params.toString()}`, { scroll: false });
+    const query = params.toString();
+    router.push(query ? `/shop?${query}` : "/shop", { scroll: false });
   };
 
   const filteredProducts = products
@@ -78,32 +78,16 @@ function ShopContent() {
 
       <main>
         {/* Shop Hero Banner */}
-        <section className="relative h-[250px] md:h-[380px] w-full overflow-hidden">
-          <Image
-            src="/images/hero shop.png"
-            alt="Lakshmi Kai Pakkuvam shop banner"
-            fill
-            priority
-            className="object-cover object-center"
-          />
-
-          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
-
-          <div className="absolute inset-0 flex items-center">
-            <div className="max-w-7xl mx-auto w-full px-5 md:px-8">
-              <motion.div
-                initial={{ opacity: 0, y: 22 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="max-w-2xl"
-              >
-                
-
-               
-
-                
-              </motion.div>
-            </div>
+        <section className="relative w-full bg-cream-100 overflow-hidden">
+          <div className="relative w-full h-[190px] sm:h-[260px] md:h-[380px] lg:h-[450px]">
+            <Image
+              src="/images/hero shop.png"
+              alt="Lakshmi Kai Pakkuvam Shop Banner"
+              fill
+              priority
+              sizes="100vw"
+              className="object-contain md:object-cover object-center"
+            />
           </div>
         </section>
 

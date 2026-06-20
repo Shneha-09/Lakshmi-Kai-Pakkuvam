@@ -29,47 +29,53 @@ const promises = [
 
 export default function BrandPromise() {
   return (
-    <section className="relative py-14 sm:py-16 md:py-24 text-white overflow-hidden">
-      <Image
-        src="/images/Home/home3.png"
-        alt="Lakshmi Kai Pakkuvam promise background"
-        fill
-        priority
-        className="object-cover"
-      />
+    <section className="relative overflow-hidden text-white">
+      <div className="absolute inset-0">
+        <Image
+          src="/images/Home/home3.png"
+          alt="Lakshmi Kai Pakkuvam promise background"
+          fill
+          priority
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-brown-900/65" />
+      </div>
 
-      <div className="absolute inset-0 bg-brown-900/45" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4">
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-12"
+          className="text-center mb-12 md:mb-14"
         >
-          <span className="text-gold-400 font-semibold text-sm tracking-widest uppercase">
+          <span className="text-gold-400 font-semibold text-xs sm:text-sm tracking-widest uppercase">
             Our Promise
           </span>
-          <h2 className="font-serif text-3xl md:text-4xl font-bold mt-2">
+
+          <h2 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold mt-3 leading-tight">
             Why Families Trust Us
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
           {promises.map((item, i) => (
             <motion.div
               key={item.title}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 22 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="text-center"
+              className="text-center px-3"
             >
-              <div className="w-16 h-16 rounded-2xl bg-brown-700/80 backdrop-blur flex items-center justify-center mx-auto mb-4 border border-gold-500/25">
+              <div className="w-16 h-16 rounded-2xl bg-brown-700/80 backdrop-blur flex items-center justify-center mx-auto mb-5 border border-gold-500/25">
                 <item.icon size={26} className="text-gold-400" />
               </div>
-              <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-              <p className="text-cream-100 text-sm leading-relaxed">
+
+              <h3 className="font-semibold text-lg md:text-xl mb-3">
+                {item.title}
+              </h3>
+
+              <p className="text-cream-100 text-sm md:text-base leading-relaxed max-w-xs mx-auto">
                 {item.desc}
               </p>
             </motion.div>
