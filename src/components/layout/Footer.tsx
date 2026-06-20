@@ -26,9 +26,9 @@ export default function Footer() {
       {/* Content */}
       <div className="relative z-10">
         <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-12 md:py-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10">
             {/* Brand */}
-            <div>
+            <div className="col-span-2 lg:col-span-1">
               <h3 className="font-serif text-2xl md:text-3xl font-bold text-white mb-2">
                 Lakshmi
               </h3>
@@ -43,13 +43,24 @@ export default function Footer() {
               </p>
 
               <div className="flex flex-wrap gap-3">
-                <a href="#" className="p-2 bg-white/10 rounded-lg hover:bg-gold-500 transition">
+                <a
+                  href="#"
+                  className="p-2 bg-white/10 rounded-lg hover:bg-gold-500 transition"
+                >
                   <Instagram size={18} />
                 </a>
-                <a href="#" className="p-2 bg-white/10 rounded-lg hover:bg-gold-500 transition">
+
+                <a
+                  href="#"
+                  className="p-2 bg-white/10 rounded-lg hover:bg-gold-500 transition"
+                >
                   <Facebook size={18} />
                 </a>
-                <a href="mailto:hariniganesan00@gmail.com" className="p-2 bg-white/10 rounded-lg hover:bg-gold-500 transition">
+
+                <a
+                  href="mailto:hariniganesan00@gmail.com"
+                  className="p-2 bg-white/10 rounded-lg hover:bg-gold-500 transition"
+                >
                   <Mail size={18} />
                 </a>
               </div>
@@ -58,39 +69,99 @@ export default function Footer() {
             {/* Quick Links */}
             <div>
               <h4 className="font-semibold text-white mb-4">Quick Links</h4>
+
               <ul className="space-y-3 text-sm md:text-base">
-                <li><Link href="/shop" className="hover:text-gold-400">Shop All</Link></li>
-                <li><Link href="/shop?category=Pickles" className="hover:text-gold-400">Pickles</Link></li>
-                <li><Link href="/shop?category=Karuvadu" className="hover:text-gold-400">Karuvadu</Link></li>
-                <li><Link href="/shop?category=Combo+Packs" className="hover:text-gold-400">Combo Packs</Link></li>
+                <li>
+                  <Link href="/shop" className="hover:text-gold-400">
+                    Shop All
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/shop?category=Pickles"
+                    className="hover:text-gold-400"
+                  >
+                    Pickles
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/shop?category=Karuvadu"
+                    className="hover:text-gold-400"
+                  >
+                    Karuvadu
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    href="/shop?category=Combo+Packs"
+                    className="hover:text-gold-400"
+                  >
+                    Combo Packs
+                  </Link>
+                </li>
               </ul>
             </div>
 
             {/* Information */}
             <div>
               <h4 className="font-semibold text-white mb-4">Information</h4>
+
               <ul className="space-y-3 text-sm md:text-base">
-                <li><Link href="/about" className="hover:text-gold-400">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-gold-400">Contact</Link></li>
-                <li><Link href="/faq" className="hover:text-gold-400">FAQ</Link></li>
+                <li>
+                  <Link href="/about" className="hover:text-gold-400">
+                    About Us
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/contact" className="hover:text-gold-400">
+                    Contact
+                  </Link>
+                </li>
+
+                <li>
+                  <Link href="/faq" className="hover:text-gold-400">
+                    FAQ
+                  </Link>
+                </li>
               </ul>
             </div>
 
             {/* Contact */}
-            <div>
+            <div className="col-span-2 lg:col-span-1">
               <h4 className="font-semibold text-white mb-4">Get In Touch</h4>
+
               <ul className="space-y-4 text-sm md:text-base">
                 <li className="flex gap-3">
-                  <Phone className="text-gold-400 mt-1 flex-shrink-0" size={16} />
+                  <Phone
+                    className="text-gold-400 mt-1 flex-shrink-0"
+                    size={16}
+                  />
                   <span className="break-words">+91 80721 15228</span>
                 </li>
+
                 <li className="flex gap-3">
-                  <Mail className="text-gold-400 mt-1 flex-shrink-0" size={16} />
-                  <span className="break-words">hariniganesan00@gmail.com</span>
+                  <Mail
+                    className="text-gold-400 mt-1 flex-shrink-0"
+                    size={16}
+                  />
+                  <span className="break-words">
+                    hariniganesan00@gmail.com
+                  </span>
                 </li>
+
                 <li className="flex gap-3">
-                  <MapPin className="text-gold-400 mt-1 flex-shrink-0" size={16} />
-                  <span className="break-words">Burmanagar, Ennore, Chennai</span>
+                  <MapPin
+                    className="text-gold-400 mt-1 flex-shrink-0"
+                    size={16}
+                  />
+                  <span className="break-words">
+                    Burmanagar, Ennore, Chennai
+                  </span>
                 </li>
               </ul>
             </div>
