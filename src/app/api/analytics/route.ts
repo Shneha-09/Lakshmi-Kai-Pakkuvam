@@ -1,31 +1,44 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import connectDB from "@/lib/mongodb";
 import Order from "@/models/Order";
 
-const isDelivered = (status: string) =>
-  status?.trim().toLowerCase() === "delivered";
+export const dynamic = "force-dynamic";
 
-const isPending = (status: string) =>
-  status?.trim().toLowerCase() === "pending";
+const cleanStatus = (status?: string) =>
+  String(status || "").trim().toLowerCase();
 
-export async function GET(req: NextRequest) {
+const isDelivered = (status?: string) => cleanStatus(status) === "delivered";
+
+const isPending = (status?: string) => {
+  const value = cleanStatus(status);
+  return (
+    value === "pending" ||
+    value === "order placed" ||
+    value === "placed" ||
+    value === "processing"
+  );
+};
+
+export async function GET() {
   try {
     await connectDB();
 
-    const allOrders = await Order.find({}).sort({ createdAt: -1 }).lean();
+    const allOrders = await Order.find({})
+      .sort({ createdAt: -1 })
+      .lean();
 
-    const deliveredOnly = allOrders.filter((order) =>
+    const deliveredOnly = allOrders.filter((order: any) =>
       isDelivered(order.status)
     );
 
     const totalOrders = allOrders.length;
 
     const totalRevenue = deliveredOnly.reduce(
-      (sum, order) => sum + Number(order.total || 0),
+      (sum: number, order: any) => sum + Number(order.total || 0),
       0
     );
 
-    const pendingOrders = allOrders.filter((order) =>
+    const pendingOrders = allOrders.filter((order: any) =>
       isPending(order.status)
     ).length;
 
@@ -37,28 +50,21 @@ export async function GET(req: NextRequest) {
     > = {};
 
     deliveredOnly.forEach((order: any) => {
-      order.items?.forEach(
-        (item: {
-          productId: string;
-          name: string;
-          quantity: number;
-          price: number;
-        }) => {
-          const id = item.productId || item.name;
+      order.items?.forEach((item: any) => {
+        const id = item.productId || item.name;
 
-          if (!productSales[id]) {
-            productSales[id] = {
-              name: item.name,
-              quantity: 0,
-              revenue: 0,
-            };
-          }
-
-          productSales[id].quantity += Number(item.quantity || 0);
-          productSales[id].revenue +=
-            Number(item.price || 0) * Number(item.quantity || 0);
+        if (!productSales[id]) {
+          productSales[id] = {
+            name: item.name,
+            quantity: 0,
+            revenue: 0,
+          };
         }
-      );
+
+        productSales[id].quantity += Number(item.quantity || 0);
+        productSales[id].revenue +=
+          Number(item.price || 0) * Number(item.quantity || 0);
+      });
     });
 
     const bestSellers = Object.entries(productSales)
@@ -66,9 +72,7 @@ export async function GET(req: NextRequest) {
       .sort((a, b) => b.quantity - a.quantity)
       .slice(0, 5);
 
-    const monthlySales: Record<string, { revenue: number; orders: number }> =
-      {};
-
+    const monthlySales: Record<string, { revenue: number; orders: number }> = {};
     const now = new Date();
 
     for (let i = 5; i >= 0; i--) {
@@ -99,35 +103,27 @@ export async function GET(req: NextRequest) {
       ...data,
     }));
 
-    const categorySales: Record<string, number> = {};
-
-    deliveredOnly.forEach((order: any) => {
-      order.items?.forEach(
-        (item: { category?: string; quantity: number; price: number }) => {
-          const cat = item.category || "General";
-
-          categorySales[cat] =
-            (categorySales[cat] || 0) +
-            Number(item.price || 0) * Number(item.quantity || 0);
-        }
-      );
-    });
-
     const recentOrders = allOrders.slice(0, 5);
 
-    return NextResponse.json({
-      success: true,
-      analytics: {
-        totalOrders,
-        totalRevenue,
-        pendingOrders,
-        deliveredOrders,
-        bestSellers,
-        monthlyData,
-        categorySales,
-        recentOrders,
+    return NextResponse.json(
+      {
+        success: true,
+        analytics: {
+          totalOrders,
+          totalRevenue,
+          pendingOrders,
+          deliveredOrders,
+          bestSellers,
+          monthlyData,
+          recentOrders,
+        },
       },
-    });
+      {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate",
+        },
+      }
+    );
   } catch (error) {
     console.error("ANALYTICS_ERROR:", error);
 
